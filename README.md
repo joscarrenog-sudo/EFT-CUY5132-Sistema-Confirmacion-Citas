@@ -7,7 +7,7 @@
 ## Integrantes
 
 - José Carreño
-- Nombre compañero
+- Alexander Escobar
 
 ## Descripción
 
