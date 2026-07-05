@@ -1,0 +1,124 @@
+{
+  "name": "Recepción",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "voz",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -32,
+        0
+      ],
+      "id": "902ac4a1-446c-437b-89ef-ac14a5cd5f68",
+      "name": "Webhook1",
+      "webhookId": "f60f3c22-4ee9-483d-9861-a9dee5401a14"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.body.User_Request }}",
+        "options": {
+          "systemMessage": "Eres un asistente útil."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        176,
+        0
+      ],
+      "id": "d28dee16-1670-4b5b-a4f8-ba236ff2a7b0",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": "xiaomi/mimo-v2.5",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        48,
+        208
+      ],
+      "id": "84137007-86c3-4b63-87b3-d2cb4ea2b1e8",
+      "name": "OpenRouter Chat Model",
+      "credentials": {
+        "openRouterApi": {
+          "id": "xWV10TOKlllSwBeg",
+          "name": "OpenRouter account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        528,
+        0
+      ],
+      "id": "798627e2-e8ff-4d9d-a177-6cf4abc203c7",
+      "name": "Respond to Webhook"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook1": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false,
+    "timeSavedMode": "fixed",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "versionId": "ec0981b2-4840-4ff5-b448-1803bced64cf",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "fc9c7987aab3fca3f01d798ae1019a354bad085e357a4aedbd737ca6cb382112"
+  },
+  "nodeGroups": [],
+  "id": "dJ3DepeFq5hQGHo8",
+  "tags": []
+}

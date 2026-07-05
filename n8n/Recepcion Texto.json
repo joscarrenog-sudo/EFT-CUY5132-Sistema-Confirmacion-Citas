@@ -1,0 +1,151 @@
+{
+  "name": "Recepcion Texto",
+  "nodes": [
+    {
+      "parameters": {
+        "trigger": [
+          "message"
+        ],
+        "channelId": {
+          "__rl": true,
+          "value": "C0BF51K59P0",
+          "mode": "list",
+          "cachedResultName": "todo-clínica-regional-en-modernización-digital"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.slackTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "b6c5f9f5-5944-4661-9eda-0098e4881434",
+      "name": "Slack Trigger",
+      "webhookId": "fc7219ed-3af6-4bc3-8a39-0148ed4d8573",
+      "credentials": {
+        "slackApi": {
+          "id": "3hNXSTtESBqMuTBf",
+          "name": "Slack account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.text }}",
+        "options": {
+          "systemMessage": "Hola. En qué puedo ayudarte?"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        208,
+        0
+      ],
+      "id": "dbc6af97-c7cb-4d56-9f07-8bfda37ec88f",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "value": "={{ $('Slack Trigger').item.json.channel }}",
+          "mode": "id"
+        },
+        "text": "={{ $json.output }}",
+        "otherOptions": {}
+      },
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.5,
+      "position": [
+        496,
+        -16
+      ],
+      "id": "955a6a8c-6c06-4d95-aa7a-fe7cef6d1fe3",
+      "name": "Send a message",
+      "webhookId": "7ae683e4-a3b9-4d47-984a-9ea7da75be56",
+      "credentials": {
+        "slackOAuth2Api": {
+          "id": "7xf2BnJMruwgbI7G",
+          "name": "Slack account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {
+          "maxTokens": 2048,
+          "temperature": 0.7
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        80,
+        208
+      ],
+      "id": "f20d51ef-318f-40b0-9dac-56e15aa6cdc4",
+      "name": "OpenRouter Chat Model",
+      "credentials": {
+        "openRouterApi": {
+          "id": "xWV10TOKlllSwBeg",
+          "name": "OpenRouter account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Slack Trigger": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "e5917f3c-f22d-4470-8d46-c24c4b9862da",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "fc9c7987aab3fca3f01d798ae1019a354bad085e357a4aedbd737ca6cb382112"
+  },
+  "nodeGroups": [],
+  "id": "NGeSzYpjR5Q2mmXr",
+  "tags": []
+}
